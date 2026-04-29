@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
+import { checkMinecraft } from "./checks/minecraft/index.js";
 
 dotenv.config();
 
@@ -25,6 +26,11 @@ app.get("/", (_req: Request, res: Response) => {
 
 app.get("/health", (_req: Request, res: Response) => {
     res.status(200).json({ status: "ok" });
+});
+
+app.get("/minecraft", async (_req: Request, res: Response) => {
+    const result = await checkMinecraft();
+    res.status(result.ok ? 200 : 503).json(result);
 });
 
 app.use((_req: Request, res: Response) => {
